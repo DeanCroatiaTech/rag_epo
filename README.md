@@ -77,14 +77,11 @@ This script will:
 
 To use the retrieval system, you can either:
 
-**Option A: Use the Gradio Interface** (uncomment the last line in `retrieve.py`):
-```python
-gr.ChatInterface(answer_question).launch()
-```
+**Option A: Use the Gradio Interface** :
 
-Then run:
+Run:
 ```bash
-python src/retrieve.py
+python src/app.py
 ```
 
 **Option B: Use the functions programmatically**:

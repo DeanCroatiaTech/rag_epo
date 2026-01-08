@@ -5,7 +5,7 @@ from litellm import completion
 from dotenv import load_dotenv
 
 from evaluation.test import TestQuestion, load_tests
-from retrieve import answer_question, fetch_context
+from retrieve import _answer_core, fetch_context
 
 
 load_dotenv(override=True)
@@ -124,7 +124,7 @@ def evaluate_answer(test: TestQuestion) -> tuple[AnswerEval, str, list]:
         Tuple of (AnswerEval object, generated_answer string, retrieved_docs list)
     """
     # Get RAG response using shared answer module
-    generated_answer, retrieved_docs = answer_question(test.question)
+    generated_answer, retrieved_docs = _answer_core(test.question)
 
     # LLM judge prompt
     judge_messages = [

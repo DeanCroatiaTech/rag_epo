@@ -80,11 +80,14 @@ def normalize_content(content) -> str:
     return str(content)
 
 
-def answer_question(question: str, history) -> str:
+def _answer_core(question: str, history=None) -> str:
     """
     Fully Gradio-compatible RAG chat function.
     Handles tuple history, dict history, and rich content.
     """
+
+    if history is None:
+        history = []
 
     messages = []
     user_questions = []
@@ -135,5 +138,12 @@ def answer_question(question: str, history) -> str:
 
     response = llm.invoke(messages)
 
-    # ✅ Always return plain string
-    return str(response.content) 
+    
+    answer = str(response.content)
+
+    return answer, docs
+
+
+def answer_question(question: str, history=None) -> str:
+    answer, _ = _answer_core(question, history)
+    return answer 

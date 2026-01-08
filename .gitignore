@@ -12,4 +12,5 @@ uv.lock
 
 .env
 .python-version
+vector_db/
 
