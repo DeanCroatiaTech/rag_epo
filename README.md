@@ -89,7 +89,7 @@ python src/app.py
 from src.retrieve import answer_question
 
 question = "What is the main purpose of this document?"
-answer, docs = answer_question(question)
+answer, docs = _answer_core(question)
 print(answer)
 ```
 
