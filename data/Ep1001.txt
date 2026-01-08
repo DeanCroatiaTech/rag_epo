@@ -1,0 +1,1677 @@
+Form EP1001 – Request for grant of a European patent #
+Structure of XML files for EP1001 #
+The following three XML files are required for an EP1001 application to be imported:
+
+File name	DTD	Description
+package-data.xml	package-data.dtd	References attached documents, except those already referenced in application-body.xml file.
+application-body.xml	ep-application-body-v1-7.dtd	(a)References attached documents as part of patent specification (technical documents or translations of technical documents into EPO language). (b)Contains complete text (or its translation into EPO language) of patent specification with referenced files for drawings.
+ep-request.xml	ep-request-v1-16.dtd	Application data as entered in Form EP1001, references other attached documents.
+References from XML files to other files #
+All PDF files and other attachments must be referenced by the package-data.xml file, or by one of the XML files that are referenced in the package-data.xml file, i.e. the application-body.xml or eprequest.xml file.
+
+package-data.xml file #
+The package-data.xml file must contain a root element <package-data> with the following attributes:
+
+lang: Country code corresponding to the language of filing (i.e., "en", "fr" or "de").
+dtd-version: Fixed value of "1.0".
+produced-by: Fixed value of "applicant"
+The top-level XML elements inside <package-data> are the following (all of them are mandatory, with the exception of <application-body> in certain cases – please see below):
+
+<transmittal-info>: This element contains a fixed structure common to all forms, indicating the type of package data (in this case, <new-application>) and the filing office (EP):
+<transmittal-info>
+    <new-application>
+        <to>
+            <country>EP</country>
+        </to>
+    </new-application>
+</transmittal-info>
+<signatories>: This element contains information regarding the parties signing the submission and the type and contents of the provided signature(s). Please refer to annex Structure of signatures in package-data.xml for a more detailed explanation on the structure and expected contents of this element when importing signed submissions. The snippet below shows the basic empty structure for an unsigned submission:
+<signatories>
+    <signatory>
+        <name/>
+            <electronic-signature date="">
+                <basic-signature>
+                    <text-string/>
+                </basic-signature>
+            </electronic-signature>
+    </signatory>
+ </signatories>
+<application-request>: Contains a reference to the XML request file (e.g., for EP1001, the ep-request.xml file) included in the package.
+<application-body>: Contains a reference to the application-body.xml file, if present. Note that, for forms where said XML files is not included in the submission package (e.g., EP2300), this element does not need to be present.
+<other-documents>: References the file names for attached documents in multiple <other-doc> child elements, using the file and file-type attributes. The document code to be received by the EPO server is contained in the <document-name> child element. E.g., for a EP1001 draft submission containing only the minimum required files:
+ <other-documents>
+    <other-doc file="ep-request.pdf" file-type="pdf">
+        <document-name>1001P</document-name>
+        <dtext/>
+    </other-doc>
+    <other-doc file="ep-request.xml" file-type="xml">
+        <document-name>REQXML</document-name>
+        <dtext/>
+    </other-doc>
+    <other-doc file="application-body.xml" file-type="xml">
+        <document-name>APPBODYXML</document-name>
+        <dtext/>
+    </other-doc>
+ </other-documents>
+The example below shows the structure of a package-data.xml file for a EP1001 submission filed in English containing an attached application document (SPECEPO) in addition to the minimum required files:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE package-data SYSTEM "package-data.dtd">
+<package-data lang="en" dtd-version="1.0" produced-by="applicant">
+
+   <transmittal-info>
+       <new-application>
+           <to>
+               <country>EP</country>
+           </to>
+       </new-application>
+   </transmittal-info>
+
+   <signatories>
+       <signatory>
+           <name/>
+           <electronic-signature date="">
+               <basic-signature>
+                   <text-string/>
+               </basic-signature>
+           </electronic-signature>
+       </signatory>
+   </signatories>
+
+   <application-request file="ep-request.xml"/>
+   <application-body-doc file="application-body.xml"/>
+
+   <other-documents>
+       <other-doc file="ep-request.pdf" file-type="pdf">
+           <document-name>1001P</document-name>
+           <dtext/>
+       </other-doc>
+
+       <other-doc file="ep-request.xml" file-type="xml">
+           <document-name>REQXML</document-name>
+           <dtext/>
+       </other-doc>
+
+       <other-doc file="application-body.xml" file-type="xml">
+           <document-name>APPBODYXML</document-name>
+           <dtext/>
+       </other-doc>
+
+       <other-doc file="SPECEPO-1.pdf" file-type="pdf">
+           <document-name>SPECEPO</document-name>
+           <dtext/>
+       </other-doc>
+   </other-documents>
+
+</package-data>
+⚠️ Important
+
+signatories section must be present, but may contain a blank entry for draft/unsigned submissions. The example above illustrates a blank <signatories> entry corresponding to an unsigned submission. To see the details of the structure of this element and an example corresponding to a signed submission, please refer to Annex - Structure of signatures in package-data.xml
+
+application-body.xml #
+The application-body.xml file references the files and page numbers for the technical documents in the <doc-page> element, each one within the <description>, <claims>, <abstract> and <drawings> elements, using the id attribute for the document code and the file attribute for the file name.
+
+The id attribute of the <doc-page> element has a unique identifier consisting of the section (e.g. DRAW) plus a counter (e.g. 1), thus DRAW1.
+Only drawings can be contained in more than one document: If there is more than one drawing section, there must be another <doc-page> element with the attribute id = DRAW2, and so forth.
+The counter (e.g. 1) in the file name (e.g. SPECEPO-1.pdf) does not relate to a specific document section (e.g. description), but it counts the files one by one when being attached via OLF2.0
+ℹ️ Note
+
+For a successful import of an EP1001 package, both the <description> and <claims> elements must be present, although they can be empty. The <abstract> and <drawings> elements are not mandatory and may be omitted if not applicable.
+
+Below is a snippet corresponding to a basic example with the minimum required content in application-body.xml for importing an EP1001 package:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application-body
+ SYSTEM "ep-application-body-v1-7.dtd">
+<application-body lang="en" dtd-version="1.7" country="EP">
+    <description>
+    </description>
+    <claims>
+    </claims>
+</application-body>
+In the example below, four individual files are attached for each section, but there could also be combined files having more than one section of the technical documents (see the examples in EP1001 - Documents).
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application-body SYSTEM "ep-application-body-v1-7.dtd">
+<application-body lang="en" dtd-version="1.7" country="EP">
+
+    <description>
+        <doc-page id="DESC1" he="1" wi="1" type="pdf" file="SPECEPO-1.pdf" ppf="1" ppl="30" pp="30"/>
+    </description>
+
+    <claims>
+        <doc-page id="CLMS1" he="1" wi="1" type="pdf" file="SPECEPO-2.pdf" ppf="31" ppl="67" pp="37"/>
+    </claims>
+
+    <abstract>
+        <doc-page id="ABST1" he="1" wi="1" type="pdf" file="SPECEPO-3.pdf" ppf="68" ppl="90" pp="23"/>
+    </abstract>
+
+    <drawings>
+        <doc-page id="DRAW1" he="1" wi="1" type="pdf" file="SPECEPO-4.pdf" ppf="91" ppl="102" pp="12"/>
+    </drawings>
+
+</application-body>
+ep-request.xml #
+The ep-request.xml file indicates the document code in the doc-type attribute of the <epelectronic-files> element and the file name in the <epo-file-name> element. In addition, the original file name as given by the user is contained in the <applicant-file-name> element.`
+
+See the following sections for details and examples.
+
+<ep-office-specific-data office="EP" lang="en">
+    <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+
+    <ep-declarations>
+
+        <ep-electronic-files doc-type="1001">
+            <applicant-file-name>ep-request.pdf</applicant-file-name>
+            <epo-file-name>ep-request.pdf</epo-file-name>
+        </ep-electronic-files>
+
+        <ep-electronic-files doc-type="SPECEPO">
+            <applicant-file-name>instant water description.pdf</applicant-file-name>
+            <epo-file-name>SPECEPO-1.pdf</epo-file-name>
+        </ep-electronic-files>
+
+        <ep-electronic-files doc-type="F1002"/>
+        
+    </ep-declarations>
+
+    <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+
+</ep-office-specific-data>
+References to translated documents #
+In the example below, Italian has been selected as the filing language of the attached application. Therefore, the original in Italian and the translation into English must be supplied. There is one PDF file having description, claims and abstract and a second PDF file having the drawings.
+
+application-body.xml #
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application-body SYSTEM "ep-application-body-v1-7.dtd">
+<application-body lang="en" dtd-version="1.7" country="EP">
+
+    <description>
+        <doc-page id="DESC1" he="1" wi="1" type="pdf" file="SPECTRANEPO-1.pdf" ppf="1" ppl="30" pp="30"/>
+    </description>
+
+    <claims>
+        <doc-page id="CLMS1" he="1" wi="1" type="pdf" file="SPECTRANEPO-1.pdf" ppf="31" ppl="67" pp="37"/>
+    </claims>
+
+    <abstract>
+        <doc-page id="ABST1" he="1" wi="1" type="pdf" file="SPECTRANEPO-1.pdf" ppf="68" ppl="90" pp="23"/>
+    </abstract>
+
+    <drawings>
+        <doc-page id="DRAW1" he="1" wi="1" type="pdf" file="SPECTRANEPO-2.pdf" ppf="91" ppl="102" pp="12"/>
+    </drawings>
+
+</application-body>
+ep-request.xml #
+<ep-office-specific-data office="EP" lang="en">
+    <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+
+    <ep-declarations>
+
+        <ep-electronic-files doc-type="1001">
+            <applicant-file-name>ep-request.pdf</applicant-file-name>
+            <epo-file-name>ep-request.pdf</epo-file-name>
+        </ep-electronic-files>
+
+        <ep-electronic-files doc-type="SPECNONEPO">
+            <applicant-file-name>Filtro motore IT.pdf</applicant-file-name>
+            <epo-file-name>SPECNONEPO.pdf</epo-file-name>
+        </ep-electronic-files>
+
+        <ep-electronic-files doc-type="SPECTRANEPO">
+            <applicant-file-name>Filtro motore EN.pdf</applicant-file-name>
+            <epo-file-name>SPECTRANEPO-1.pdf</epo-file-name>
+        </ep-electronic-files>
+
+        <ep-electronic-files doc-type="SPECTRANEPO">
+            <applicant-file-name>Filtro motore disegno EN.pdf</applicant-file-name>
+            <epo-file-name>SPECTRANEPO-2.pdf</epo-file-name>
+        </ep-electronic-files>
+
+    </ep-declarations>
+
+    <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+
+</ep-office-specific-data>
+Basic structure of ep-request.xml #
+The ep-request.xml file contains the application data in Form EP1001. Its root element is <eprequest>, which contains the following attributes:
+
+XML Attribute	Attribute Description	Example/fixed value
+lang	Procedural language for the attached/previous application, indicated by its 2-letter language code (en, fr, de).	E.g.: “en”
+dtd-version	Version of DTD used.	Fixed value: "1.0"
+produced-by	Indicates role of party generating the submission (e.g., applicant).	Fixed value: “applicant”
+ro	Code for the receiving office	Fixed value: “EP”
+date-produced	Date/time of package generation in “YYYYMMDD hh:mm:ss” format.	E.g.: "20240122 11:19:17"
+Below the top-level XML elements under <ep-request> and their key attributes are listed
+
+<file-reference-id> #
+Internal/user rederence ID name for the EP1001 submission, as it will appear on the OLF2.0 GUI for edition/review. Can be any name chosen by the user with the following limitations:
+
+Up to 25 characters long.
+Only letters, numbers, double quotes and the following symbols: .,<>=_-()/ are supported
+E.g.:
+
+<file-reference-id>My_1001_request</file-reference-id>
+<request-petition> #
+Descriptive name of the request corresponding to the form.
+
+For EP1001, this will be a fixed string as follows:
+
+<request-petition>
+    Grant of European patent, and examination of the application under Article 94, are hereby requested.
+</request-petition>
+<invention-title> #
+Title of the invention in each EPO language.
+
+An EP1001 request must have 3 <invention-title> elements corresponding to each main EPO language (en, fr, de). Attributes:
+
+lang: Language code (2-letters) of the provided invention title (en, fr, de). E.g.:
+<invention-title lang="en">DIAL-A-PIRATE copy protection card</invention-title>
+<ep-previously-filedapplication> #
+When filing an EP1001 form by reference to a previously filed application, this element must be present and contain the details of said referred application (otherwise, it should not appear).
+
+Please see Reference to a previously filed application for details and an example case
+
+<parties> #
+List of parties involved in the application (applicants, inventors, representatives…). This element has no text value nor attributes, and instead contains a set of children elements.
+
+Please see EP1001 – Parties, Inventors for details and example cases.
+
+<priority-claims> #
+This element is only present when the application includes declaration of one or more priority claims and contains the information regarding them.
+
+⚠️ Important
+
+If the application does not contain any priority claims, this element should not appear.
+
+Please see EP1001 – Application details – Priority for details and example cases.
+
+<check-list> #
+Contains a list of children nodes corresponding to the type of document (request, description, claims…). E.g.: <cl-description>
+
+Each of the aforementioned child elements indicates numeric values related to each of the documents included in the submission, such as the total count of pages on it, no. of the first and last pages, etc.
+
+This section is not mandatory. However, please note that, if present, this section should always contain, at least, a single empty child element <clrequest/>
+
+E.g.:
+
+<check-list>
+    <cl-request/>
+    <cl-description page-count="30" ppf="1" ppl="30"/>
+Please see the section about <check-list> in EP1001 – Documents for more details and example cases.
+
+<ep-language-of-filing> #
+Filing language of the attached/previous application. E.g.: “en”
+
+Attributes:
+
+lang-code: Code saying the type of specified filing language. Its value should be:
+“epo” for an EPO official language
+“non-epo” for a language admissible but not officially supported for EP filings
+“other” for any other language E.g.:
+<ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+Please see EP1001 – General information for details and example cases.
+
+<ep-office-specificdata> #
+EP1001 request data specific to the filing office (declarations, fees…).
+
+Attributes:
+
+office: Receiving/filing office to which the specific data in the element applies.
+⚠️ Important
+
+For EP1001 filed to the EPO, this should have a fixed value of “EP”.
+
+lang: Procedural language, same as in element <ep-request>. E.g.: “en”
+This element will contain the applicable requests/declarations for EP1001 (e.g., request for reduction of fees under Rule 7a(1)), application details (i.e., designated states, priority claims…), information about the attached documents, the information regarding fees, and (optionally) any enclosed annotations to EPO.
+
+Applicable requests/declarations for EP1001 (e.g., request for reduction of fees under Rule 7a(1)), grouped inside sub-element <ep-declarations> (containing one or more children for each applicable declaration). Note that, for the Request for examination in an admissible non-EPO language (Article 14(4) EPC), a separate sub-element <ep-request-for-exam-art94> is used instead.
+Application details, i.e., designated states and biological materials (when applicable):
+Information regarding designated states is contained in sub-element <ep-designated-states>.
+Information regarding biological materials is contained in sub-element <ep-biological-material>.
+Information about the attached documents, in one or more <epelectronic-files> sub-elements.
+Information regarding fees, in sub-element <ep-financial-data>.
+The basic example below illustrates the general structure of element <epoffice-specific-data>:
+
+<ep-office-specific-data office="EP" lang="en">
+    <ep-designated-states waiver-communication-and-processing-ofnon-designated-states="no">
+    …
+    </ep-designated-states>
+    <ep-request-for-exam-art94 lang="pt"/>
+    <ep-declarations>
+        <waiver-to-indicate-further-processing/>
+        <declaration-of-entity-or-natural-person/>
+    <declaration-of-micro-entity/>
+    </ep-declarations>
+    <ep-electronic-files doc-type="1001">
+        <applicant-file-name/>
+        <epo-file-name>ep-request.pdf</epo-file-name>
+    </ep-electronic-files>
+     <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no">
+    …
+    </ep-financial-data>
+ </ep-office-specific-data>
+Example #
+Below is an example showing the general structure in ep-request.xml and the top-level elements listed above
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ep-request
+ SYSTEM "ep-request-v1-16.dtd">
+<ep-request lang="en"
+            dtd-version="1.0"
+            produced-by="applicant"
+            ro="EP"
+            date-produced="20240122 11:19:17">
+    
+    <file-reference-id>1001_appl-inv</file-reference-id>
+    
+    <request-petition>Grant of European patent, and examination of the application under Article 94, are hereby requested.</request-petition>
+    
+    <invention-title lang="en">INSTANT WATER</invention-title>
+    <invention-title lang="fr">EAU INSTANTANÉE</invention-title>
+    <invention-title lang="de">INSTANT-WASSER</invention-title>
+    
+    <parties>
+    …
+    </parties>
+    
+    <check-list>
+        <cl-request/>
+    </check-list>
+    
+    <ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+    
+    <ep-office-specific-data office="EP" lang="en">
+        …
+        <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no">
+        …
+        </ep-financial-data>
+    </ep-office-specific-data>
+</ep-request>
+The details for the child elements of <ep-request>, their relevant attributes and how they are mapped to the different form fields and tabs (e.g., the list of involved parties and their contact information in the <parties> element, filled out via the Parties, Inventors tab in the EP1001 form) will be described in subsequent section in this form’s chapter.
+
+Document codes and file types for EP1001 #
+For the successful import of XML data into OLF2.0, the values for the <document-name> element, the doc-type attribute and the file attribute must follow the standard values for the document code as listed in the table below.
+
+⚠️ Important
+
+Without the correct document code, the receiving server at the EPO cannot accept files.
+
+Request #
+Document Code	EPO File name	Description
+ADDRESSXML	address-matching.xml	Package
+APPBODYXML	application-body.xml	Application body, see Structure of XML files for EP1001
+APPMERGEXML	result-filing.xml	Package
+BIODEPXML		Biology
+PACKDATAXML	package-data.xml	Package
+RECXML	xmit-receipt.xml	Receipt in XML format
+REQUESTXML	ep-request.xml	EP1001 form in XML format
+REQXML	ep-request.xml	Application data, see Structure of XML files for EP1001
+Technical documents and their translation in official EPO language (selected procedural language) #
+Document Code	EPO File name	Description
+SPECEPO	SPECEPO-1.pdf	Single file specification in EPO language
+SPECTRANEPO	SPECTRANEPO-1.pdf	Single file translated specification from a non-EPO language
+Technical documents in non-official EPO language or other languages #
+Document Code	EPO File name	Description
+CLMSNONEPO	CLMSNONEPO.pdf	Claims in admissible non-EPO language
+CLMS	CLMSNONEPO.pdf	Claims in admissible non-EPO language (when referenced in package-data.xml and applicationbody.xml)
+DRAWNONEPO	DRAWNONEPO.pdf	Drawings in admissible non-EPO language
+SPECNONEPO	SPECNONEPO.pdf	Specification in admissible non-EPO language
+Optional additional files for technical documents #
+Document Code	EPO File name	Description
+OLF-ARCHIVE	OLF-ARCHIVE.zip	Pre-conversion archive (contains original technical documents in any language, before conversion to PDF, e.g. in DOC format)
+Documents concerning biological material, sequence listings #
+Document Code	EPO File name	Description
+SEQLXML26	SEQLXML26.xml	Sequence listing in XML format (by WIPO Standard ST.26)
+SEQLZIP26	SEQLZIP26.zip	Sequence listing in ZIP format (by WIPO Standard ST.26)
+BIOMAUTH	BIOM-AUTH-1.pdf	Authorisation under Rule 31(1)(d)
+BIOMRECEIPT	BIOM-RECEIPT-1.pdf	Receipt(s) of deposit issued by depositary institution
+BIOMWAIV	BIOM-WAIV-1.pdf	Waiver of the right to an undertaking from requestor pursuant to Rule 33(2)
+Documents concerning applicant, representative and inventor #
+Document Code	EPO File name	Description
+1003	SPECAUTH-1.pdf	Specific authorisation
+1004	GENAUTH-1.pdf	General authorisation
+INVT201	Signed-EPR201.pdf	Inventor waiver - Rule 20(1) EPC
+Graphic files #
+Documents concerning applicant, representative and inventor #
+Document Code	EPO File name	Description
+PATXMLTIF	<filename>.jpg	Drawing in JPG format (referenced by applicationbody.xml file as a result of attaching specification in XML format)
+PATXMLTIF	<filename>.tif	Drawing in TIF format (referenced by applicationbody.xml file created by PatXML)
+OTHERTIF	<filename>.tif	Other
+SIGNIMGTIF	<Request>-signature-1.tif	Unexpected/undefined document
+Additional documents #
+Document Code	EPO File name	Description
+PRIOTRAN	PRIOTRAN-1.pdf	Translation of priority documents
+REESGROUNDS	REESGROUNDS.pdf	Grounds for re-establishment of rights
+CERTPRIO	CERTPRIO-1.pdf	Certified priority document (must be digitally signed)
+OTHERPDF	OTHER-1.pdf	Other document in PDF format
+PRSR	PRSR-1.pdf	Search results required under Rule 141(1) EPC for priority claim
+PRSR-REF	PRSR-REF.pdf	Search results required under Rule 141(1) EPC for previously filed application
+Documents generated by OLF2.0 (not to be imported) #
+Document Code	EPO File name	Description
+F1002	F1002-1.pdf	Designation of inventor
+INVT201	EPR201-1.pdf	Waiver - Rule 20(1) EPC / Inventor-related document
+1001P	ep-request.pdf	Application in PDF format
+Other document codes #
+Document Code	EPO File name	Description
+ADDRREPPDF	address-matching.pdf	Manual correction of address details
+BIOM	BIOM-1.pdf	Letter concerning biological material
+CERTPRIO	CERTPRIO-1.pdf	Electronic priority document
+DASCODE	DASACCDOC.pdf	
+F1002E	f1002-1.pdf	Designation of inventor
+INCANNEX	SPECEPO-1.PDF	Annex
+INVT	INVT-1.pdf	Letter concerning the inventor
+PRIODOC	PRIO-1.pdf	Priority document
+PRSR-PRIO	PRSR-1.pdf	
+RECPDF	receipt.pdf	Acknowledgement of receipt of electronic submission of the request for grant of a European paten
+SRCH	SRCH-1.pdf	Letter concerning search matters
+ℹ️ Note
+
+If there are more than one files of the same type of document, the character 1 in the file names must be replaced by 2, 3 etc.
+
+EP1001 - General information #
+Form EP1001 starts with the General information tab where basic data for the application is entered.
+
+Filing office
+Waivers, requests, and declarations
+Procedural language
+Filing language
+Title of invention
+The basic request information listed above is imported from the following top-level XML elements and attributes under <ep-request>
+
+<ep-request> element #
+<file-reference-id> #
+Internal ID name for the EP1001 submission, as it will appear on the OLF2.0 GUI for edition/review. Can be any name chosen by the user with the following limitations:
+
+Up to 25 characters long
+No blank spaces E.g.:
+<file-reference-id>My_1001_request</file-reference-id>
+<invention-title> #
+Title of the invention in a given EPO language. An EP1001 request must contain 3 <invention-title> elements corresponding to each main EPO language (en, fr, de).
+
+Required attributes:
+
+lang: Language code (2-letters) of the provided invention title (en, fr, de).
+E.g.:
+
+<invention-title lang="en">INSTANT WATER</invention-title>
+<invention-title lang="fr">EAU INSTANTANÉE</invention-title>
+<invention-title lang="de">INSTANT-WASSER</invention-title>
+ep-previously-filed-application #
+When filing an EP1001 form by reference to a previously filed application, this element must be present and contain the details of said referred application (otherwise, it should not appear).
+
+ep-language-of-filing #
+
+Must have the 2-3 letter code of the filing language of the attached/previous application. E.g.: “en” Required attributes:
+
+lang-code: Code indicating the type of specified filing language. Its value should be:
+“epo” for an EPO official language. Possible values in this case are: en (English), fr (French), de (German).
+“non-epo” for a language admissible but not officially supported for EP filings. Possible values in this case are:
+sq (Albanian), bg (Bulgarian), hr (Croatian), cs (Czech), da (Danish), nl (Dutch), et (Estonian), fi (Finnish), el (Greek), hu (Hungarian), is (Icelandic), ga (Irish), it (Italian), lv (Latvian), lt (Lithuanian), lb (Luxembourgish), mk (Macedonian), mt (Maltese), cnr (Montenegrin), no (Norwegian), pl (Polish), pt (Portuguese), ro (Romanian), sr (Serbian), sk (Slovak), sl (Slovenian), es (Spanish), sv (Swedish), tr (Turkish)
+"other" for any other language.
+E.g:
+
+<ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+Note that, when attribute lang-code is “non-epo” or “other”, a second <ep-language-of-filing> element with lang-code=”translation” must appear indicating the language in which the (mandatory) translation of the filing is being submitted. E.g.:
+
+<ep-language-of-filing lang-code="other">el</ep-language-of-filing>
+<ep-language-of-filing lang-code="translation">en</ep-language-of-filing> 
+<ep-office-specific-data> #
+EP1001 request data specific to the filing office. This XML element may contain data from the General information tab related to procedural language and applicable requests and declarations. The attributes containing general application information are:
+
+office: Filing office to which the specific data in the element applies. For EP1001 filed to EPO, this should have a fixed value of “EP”.
+lang: Procedural language, same as in element <ep-request>. E.g.: “en” E.g.:
+<ep-office-specific-data office="EP" lang="en">
+Depending on When the submission includes any of the following requests and/or declarations, element <ep-office-specific-data> may contain one or more additional children (see below).
+
+<ep-office-specific-data> details #
+When the submission includes any of the following requests and/or declarations selectable from the General information tab, element <ep-office-specific-data> must contain one or more additional children as described below:
+
+Request for examination in an admissible non-EPO language (Article 14(4) EPC): A <ep-request-for-exam-art94> child element must be present indicating the code of the requested language in its lang attribute. E.g.:
+<ep-request-for-exam-art94 lang="sq"/>
+Filing of a new European patent application by the entitled person (Article 61(1)(b) EPC, Rule 17 EPC): An <ep-art61-appl> child element must be present indicating the application number of the earlier application, following the EP########.# format. E.g.:
+<ep-art61-appl>EP20760406.7</ep-art61-appl>
+Waiver of the right to be asked whether to proceed further with the application (Rule 70(2) EPC): An <ep-declarations> child must be present having an empty element <waiver-to-indicate-further-processing/> to indicate this declaration.
+The/Each applicant requests a reduction of fees under Rule 7a(1) EPC and is a natural person or entity under Rule 7a(2) EPC: An <ep-declarations> child must be present containing an empty element <declaration-of-entity-or-natural-person/> to indicate this declaration.
+The/Each applicant requests a reduction of fees under Rule 7a(3) EPC and is a micro-entity under Rule 7a(3) EPC: An <ep-declarations> child must be present containing an empty element <declaration-of-micro-entity/> to indicate this declaration.
+The example snippet below shows the structure of an <ep-office-specific-data> element containing all the above declarations, including a request for examination in Portuguese (pt) and a referral to an earlier application for filing of a new EP by the entitled person under Article 61:
+
+<ep-office-specific-data>
+  …
+  <ep-request-for-exam-art94 lang="pt"/>
+  <ep-art61-appl>EP20760406.7</ep-art61-appl>
+  <ep-declarations>
+    <waiver-to-indicate-further-processing/>
+    <declaration-of-entity-or-natural-person/>
+    <declaration-of-micro-entity/>
+  </ep-declarations>
+  …
+</ep-office-specific-data>
+ℹ️ Note
+
+Depending on the General information options selected for the request, additional XML elements and attributes may also need to be defined in other sections of ep-request.xml besides the items in the above list. Please see the examples provided in the subsequent sections for various examples covering different scenarios and applicable options.
+
+Request in English #
+ep-request.xml #
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ep-request SYSTEM "ep-request-v1-5.dtd">
+<ep-request lang="en"
+            dtd-version="1.0"
+            produced-by="applicant"
+            ro="EP"
+            date-produced="20240119 15:25:39">
+    <!--software_name --><!--software_version --><!--stylesheet_version -->
+    <file-reference-id>1001-request-EN</file-reference-id>
+    <request-petition>Grant of European patent, and examination of the application under Article 94, are hereby requested.</request-petition>
+    <invention-title lang="en">INSTANT WATER</invention-title>
+    <invention-title lang="fr">EAU INSTANTANÉE</invention-title>
+    <invention-title lang="de">INSTANT-WASSER</invention-title>
+    <parties>
+        <check-list/>
+    </parties>
+    <ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+    <ep-office-specific-data ep-lang="en">
+        <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+        <ep-declarations>
+            <waiver-to-indicate-further-processing/>
+        </ep-declarations>
+        <ep-electronic-files doc-type="1001">
+            <applicant-file-name/>
+            <epo-file-name>ep-request.pdf</epo-file-name>
+        </ep-electronic-files>
+        <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+    </ep-office-specific-data>
+</ep-request>
+XML Element	How value is stored
+<file-reference-id>	Element value. E.g.: <file-reference-id>1001-request-EN</file-reference-id>
+<ep-request>	Value in attribute ro. E.g.: <ep-request lang="en" ro="EP" ... >
+<waiver-to-indicate-further-processing/>	Element presence (empty)
+<ep-office-specific-data>	Value in attribute lang
+<ep-language-of-filing>	Element value
+<invention-title lang="en">	Element value
+<invention-title lang="fr">	Element value
+<invention-title lang="de">	Element value
+<ep-request>	Value in attribute date-produced
+Request in other languages, declaration under Rule 7a(1) EPC #
+This example proves an application where both the request for examination and the patent application documents are submitted in an admissible non-official EPO language (i.e., the language is not English, German or French).
+
+If all applicant(s) fulfil the conditions of Rule 7a(2) EPC, they can opt for the Declaration under Rule 7a(1). Please refer to the Online Filing 2.0 User Guide for more details on the effect of the language settings. The <declaration-of-entity-or-natural-person/> element requires that:
+
+the <ep-request-for-exam-art94/> is present and the value of its lang attribute is the two-letter code of one of the admissible non-official EPO languages -OR-
+"non-epo" is the value of the lang-code attribute in the <ep-language-of-filing> element and the content of the element is the two-letter code of one of the admissible non-official EPO languages.
+The <declaration-of-entity-or-natural-person/> element is required where applicant(s) referred to in Article 14(4) EPC fulfil the conditions of Rule 7a(2) EPC and therefore wish to apply fee reductions
+
+ep-request.xml #
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ep-request SYSTEM "ep-request-v1-5.dtd">
+<ep-request lang="fr"
+            dtd-version="1.0"
+            produced-by="applicant"
+            ro="EP"
+            date-produced="20240122 07:41:16">
+    <!--software_name --><!--software_version --><!--stylesheet_version -->
+    <file-reference-id>1001-request-IT/FR</file-reference-id>
+    <request-petition>Grant of European patent, and examination of the application under Article 94, are hereby requested.</request-petition>
+    <invention-title lang="fr">EAU INSTANTANÉE</invention-title>
+    <invention-title lang="en">INSTANT WATER</invention-title>
+    <invention-title lang="de">INSTANT-WASSER</invention-title>
+    <parties>
+        <check-list/>
+    </parties>
+    <ep-language-of-filing lang-code="non-epo">it</ep-language-of-filing>
+    <ep-language-of-filing lang-code="translation">fr</ep-language-of-filing>
+    <ep-office-specific-data ep-lang="fr">
+        <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+        <ep-request-for-exam-art94 lang="it"/>
+        <ep-declarations>
+            <declaration-of-entity-or-natural-person/>
+        </ep-declarations>
+        <ep-electronic-files doc-type="1001">
+            <applicant-file-name/>
+            <epo-file-name>ep-request.pdf</epo-file-name>
+        </ep-electronic-files>
+        <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+    </ep-office-specific-data>
+</ep-request>
+XML Element	How value is stored
+<file-reference-id>	Element value
+<ep-request>	Attribute ro
+<ep-request-for-exam-art-94>	Element presence (when 3 is applicable)
+<ep-request-for-exam-art-94>	Attribute lang
+<ep-office-specific-data>	Attribute lang
+<declaration-of-entity-or-natural-person />	Element presence
+<ep-office-specific-data>	Attribute lang
+<ep-language-of-filing>	Attribute lang-code
+<ep-language-of-filing>	Element value
+<invention-title lang="fr">	Element value
+<invention-title lang="en">	Element value
+<invention-title lang="de">	Element value
+<ep-request>	Attribute date-produced
+Divisional application #
+ep-request.xml #
+        <ep-divisional-appl>
+            <parent-doc>
+                <document-id lang="en">
+                    <country>EP</country>
+                    <doc-number>EP14800500.2</doc-number>
+                    <date>20140917</date>
+                </document-id>
+            </parent-doc>
+            <ep-first-communication-raising-lack-of-unity>
+                <date/>
+            </ep-first-communication-raising-lack-of-unity>
+            <ep-divisional-generation generation="3"/>
+            <ep-declaration-and-request-on-sequence-listing-of-earlier-application/>
+        </ep-divisional-appl>
+        <ep-declarations/>
+        <ep-electronic-files doc-type="1001"/>
+        <ep-electronic-files doc-type="F1002"/>
+        <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+    </ep-office-specific-data>
+</ep-request>
+Filing of a new European patent application by the entitled person, declaration under Rule 7a(3) EPC #
+This example proves an application where a request is made for filing of a new European patent application referencing an earlier application (Article 61(1)(b) EPC, Rule 17 EPC) and with the applicant being declared a micro-entity under Rule 7a(3) EPC in order to request a reduction of fees.
+
+Following Article 61(1)(b) EPC, Rule 17 EPC, if by a final decision it is adjudged that a person other than the applicant is entitled to the grant of the European patent, that person may file a new European patent application in respect of the same invention. This is indicated by selecting the “Filing of a new European patent application by the entitled person (Article 61(1)(b) EPC, Rule 17 EPC)” checkbox on the General information tab on the OLF2.0 GUI.
+
+If all applicant(s) fulfil the conditions of Rule 7a(3) EPC, they can opt for the declaration under said rule to request a reduction of fees. This is indicated by selecting the “The/Each applicant requests a reduction of fees under Rule 7a(3) EPC and is a micro-entity under Rule 7a(3) EPC” checkbox on the General information tab on the OLF2.0 GUI.
+
+ep-request.xml #
+In this scenario, the ep-request.xml file must include the following additional XML elements inside the <ep-office-specific-data> element (shown as highlighted lines on the example snippet below):
+
+Filing of a new European patent application by the entitled person: Element <ep-art61-appl> must appear under the <ep-office-specific-data>, containing the application number of the earlier application in question following the EP########.# format.
+The/Each applicant requests a reduction of fees and is a micro-entity under Rule 7a(3) EPC: Section <ep-declarations> must be present under <ep-office-specific-data> and contain an empty child element <declaration-of-micro-entity/>.
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ep-request SYSTEM "ep-request-v1-16.dtd">
+<ep-request lang="en"
+            dtd-version="1.0"
+            produced-by="applicant"
+            ro="EP"
+            date-produced="20240122 11:19:17">
+    <file-reference-id>1001_appl-inv</file-reference-id>
+    <request-petition>
+        Grant of European patent, and examination of the application under Article 94, are hereby requested.
+    </request-petition>
+    <invention-title lang="en">INSTANT WATER</invention-title>
+    <invention-title lang="fr">EAU INSTANTANÉE</invention-title>
+    <invention-title lang="de">INSTANT-WASSER</invention-title>
+    <parties>
+        …
+    </parties>
+    <check-list>
+        <cl-request/>
+    </check-list>
+    <ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+    <ep-office-specific-data office="EP" lang="en">
+        <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+            …
+        </ep-designated-states>
+        <ep-art61-appl>EP20760406.7</ep-art61-appl>
+        <ep-declarations>
+            <declaration-of-micro-entity/>
+        </ep-declarations>
+        <ep-electronic-files doc-type="1001">
+            <applicant-file-name/>
+            <epo-file-name>ep-request.pdf</epo-file-name>
+        </ep-electronic-files>
+        <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no">
+            …
+        </ep-financial-data>
+    </ep-office-specific-data>
+</ep-request>
+Reference to a previously filed European application #
+ep-request.xml #
+When referring to a previously filed EP application (element 4), the ep-request.xml file will include an additional XML element <ep-previously-filed-application>, which contains the following attributes:
+
+XML Attribute	Attribute Description	Example/fixed value
+filing-date	Date of filing of the previously filed application, in YYYYMMDD format (element 7)	E.g.: "20090430"
+ep-document-type	Type of referred document (element 6). Can be one of the following: patent, provisional, utility, PCT	E.g.: "patent"
+replaces-claim	"yes" or "no" value indicating if the previously filed application also replaces claims (Rule 57(c)).	E.g.: "no"
+number-of-claims	If the application replaces claims (see above), this specifies the no. of claims in the previously filed application.	Blank when replaces-claim="no"
+contains-sequence-listing	"yes" or "no" value indicating if the description contains a sequence listing in accordance with Rule 30(1).	E.g.: "no"
+is-also-priority	"yes" or "no" value indicating if the referred previously filed application is also a priority application.	E.g.: "no"
+certified-copy	This is an optional attribute when the “Office where the previously filed application was filed” is not EP	E.g.: "later"
+    <file-reference-id>1001-doc-prevef</file-reference-id>
+    <request-petition>
+        Grant of European patent, and examination of the application under Article 94, are hereby requested.
+    </request-petition>
+    <invention-title lang="en">Instant water</invention-title>
+    <invention-title lang="fr">Eau instantanée</invention-title>
+    <invention-title lang="de">Instant wasser</invention-title>
+    <ep-previously-filed-application 
+        filing-date="20090430"
+        ep-document-type="patent"
+        replaces-claims="no"
+        number-of-claims=""
+        contains-sequence-listing="no"
+        is-also-priority="no">
+        <document-id lang="en">
+            <country>EP</country>
+            <doc-number>EP09000123.1</doc-number>
+        </document-id>
+    </ep-previously-filed-application>
+    <parties>
+        …
+    </parties>
+    <check-list/>
+    <ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+    <ep-office-specific-data office="EP" lang="en">
+        <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+        <ep-art61-appl>EP09000123.1</ep-art61-appl>
+        <ep-declarations/>
+        <ep-electronic-files doc-type="1001"/>
+        <ep-electronic-files doc-type="SPECIPO"/>
+        <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+    </ep-office-specific-data>
+</ep-request>
+Reference to a previous international application #
+ep-request.xml #
+<ep-previously-filed-application 
+        filing-date="20120627"
+        ep-document-type="patent"
+        replaces-claims="yes"
+        number-of-claims="25"
+        contains-sequence-listing="yes"
+        is-also-priority="yes"
+        certified-copy="later">
+    <document-id lang="it">
+        <country>IT</country>
+        <doc-number>TO2012A123456</doc-number>
+    </document-id>
+</ep-previously-filed-application>
+
+<parties>
+    …
+</parties>
+
+<priority-claims>
+    <ep-priority-claim sequence="1" kind="national" ep-document-type="patent">
+        <country>IT</country>
+        <doc-number>TO2012A800789</doc-number>
+        <date>20121125</date>
+        <priority-doc-from-library/>
+        <earlier-searches/>
+    </ep-priority-claim>
+</priority-claims>
+
+<check-list>
+    <cl-request/>
+    <cl-claims number-claims-fee-calculation="15"/>
+    <cl-abstract page-count="8" ppf="1" ppl="8"/>
+</check-list>
+
+<figure-to-publish/>
+
+<ep-language-of-filing lang-code="non-epo">it</ep-language-of-filing>
+<ep-language-of-filing lang-code="translation">en</ep-language-of-filing>
+
+<ep-office-specific-data office="EP" lang="en">
+    <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+    <ep-declarations>
+        <ep-declaration-translation-filed-later/>
+    </ep-declarations>
+    <ep-electronic-files doc-type="1001"/>
+</ep-office-specific-data>
+EP1001 – Parties, Inventors #
+The Parties, Inventors tab of Form EP1001 accommodates all data for names, persons and addresses relating to the application. At least one applicant is required.
+
+Applicant(s)
+Representative(s)
+Inventor(s)
+Authorisations and waivers
+Address for correspondence
+The <parties> element in ep-request.xml contains all the different parties involved in the submission (in the case of EP1001, applicants, representatives/agents or inventors) and is grouped into the following entries:
+
+<applicants> contains one or more <applicant> elements for each involved applicant.
+When an applicant is named in <applicants> section as a common representative, a single <correspondence-address> element may also be present under <parties> providing a separate address for correspondence for said applicant (if applicable).
+<agents> contains one or more <ep-agent> elements for each involved representative.
+<inventors> contains one or more <ep-inventor> elements for each involved inventor.
+The required attributes for each individual <applicant>, <ep-inventor> and <ep-agent> element are mostly specific to the type of party, as listed in the tables below
+
+<applicant> attribute
+
+XML Attribute	Attribute Description	Example/fixed value
+sequence	Order no. of the applicant in the list of applicants. Always required. “0” if no applicants.	"1"
+designation	Fixed value indicating that designated states are as indicated in the submission. Always required.	"as-indicated"
+app-type	Indicates the type of applicant. Always required. Can be one of:	"applicant-inventor"
+- "applicant": regular applicant	
+- "applicant-inventor": applicant who is also the inventor	
+- "employee": legal applicant represented by employee	
+<ep-agent> attributes
+
+XML Attribute	Attribute Description	Example/fixed value
+sequence	Order no. of the representative in the list. Always required.	"1"
+rep-type	Always required. Indicates sub-type of representative:	"common-representative"
+- "common-representative": association	
+- "agent": individual	
+- "attorney": legal practitioner	
+ep-association-number	Required if rep-type="common-representative". Must provide association registration number.	"125"
+ep-authorisation	Indicates general authorisation type. Required if filing a general authorisation. Values:	"attached"
+- "attached": individual authorisation attached	
+- "registered": authorisation number must be provided in general_authorisation_number	
+- "filed-not-yet-registered"	
+general_authorisation_number	Required if ep-authorisation="registered". Must provide registered number.	"102356"
+<ep-inventor> attributes
+
+XML Attribute	Attribute Description	Example/fixed value
+sequence	Order no. of the inventor in the list of inventors. Always required.	"1"
+designation	Fixed value indicating that designated states are as indicated in the submission. Always required.	"as-indicated"
+deceased	"yes" or "no" value indicating if the inventor is deceased. Always required.	"no"
+inv-rights	Always required. Indicates how the inventor acquired the right to the European patent. Values:	"under-agreement"
+- "employee": as employer	
+- "successor": as successor in title	
+- "under-agreement": based on agreement (requires inv-rights-date)	
+ℹ️ Note
+
+Even if a submission is to be imported with no applicants listed under the Parties, Inventors section (either as a draft to be filled out later, or as a submission with only representatives named), the <applicants> section must still be present and contain an empty <applicant> entry with a sequence no. "0", as the example snippet below:
+
+<applicants>
+    <applicant sequence="0" app-type="applicant" designation="as-indicated">
+        <addressbook lang="en">
+            <name name-type="legal"/>
+            <address>
+                <postcode/>
+                <country/>
+            </address>
+        </addressbook>
+        <nationality>
+            <country/>
+        </nationality>
+        <residence>
+            <country/>
+        </residence>
+    </applicant>
+</applicants>
+Each <applicant>, <ep-inventor>, and <ep-agent> element should contain:
+
+A single <addressbook> sub-element with the name and address details.
+This element should always be present (required).
+If a specific country of nationality is to be specified, a <nationality> sub-element should also be present.
+This will contain a single <country> child element with the 2-letter country code
+(e.g., "IT" for Italy).
+Similarly, if a specific country of residence is to be specified, a <residence> sub-element should also be present,
+with the same internal structure as the above.
+ℹ️ Note
+
+The <nationality> and <residence> sections are only applicable to <applicant> and <ep-agent> entries
+(i.e., not for <ep-inventor>).
+
+The example below shows the basic structure for the <parties> section in a request that only includes a single applicant specifying Italy (IT) as both their nationality and residence country:
+
+   <parties>
+      <applicants>
+         <applicant sequence="1"
+                    designation="as-indicated"
+                    app-type="applicant">
+            <addressbook lang="en">
+               …
+            </addressbook>
+            <nationality>
+               <country>IT</country>
+            </nationality>
+            <residence>
+               <country>IT</country>
+            </residence>
+         </applicant>
+      </applicants>
+   </parties>
+The <addressbook> element with the name and address detail for each party will have the following single attribute:
+
+lang: 2-letter language code. This must match the procedural language for the attached/referred application. E.g.: <addressbook lang="en">
+The structure of the <addressbook> element is specific to the type of party involved (applicant/representative/inventor) and its sub-type (e.g., legal or natural person, for applicants)
+
+<applicant> — Applicant, legal person
+
+<name name-type="legal"/>
+<registered-number/>
+<address>
+  <address-2/>
+  <pobox/>
+  <street/>
+  <city/>
+  <state/>
+  <postcode/>
+  <country/>
+</address>
+<phone/>
+<email/>
+<applicant> — Applicant, natural person
+
+<last-name/>
+<first-name/>
+<orgname/>
+<department/>
+<registered-number/>
+<address>
+  <pobox/>
+  <street/>
+  <city/>
+  <state/>
+  <postcode/>
+  <country/>
+</address>
+<phone/>
+<email/>
+<ep-agent> — Professional representative, association
+
+<last-name/>
+<department/>
+<registered-number/>
+<address>
+  <pobox/>
+  <street/>
+  <city/>
+  <state/>
+  <postcode/>
+  <country/>
+</address>
+<phone/>
+<email/>
+<ep-agent> — Professional representative, individual
+
+<last-name/>
+<first-name/>
+<ep-agent> — Legal practitioner
+
+Same as above.
+
+<ep-inventor> — Inventor
+
+<last-name/>
+<first-name/>
+<address>
+  <city/>
+  <postcode/>
+  <country/>
+</address>
+ℹ️ Note
+
+For representatives of sub-type association (i.e., with attribute rep-type=“common-representative”), the value of the <last-name> element corresponds to the Organisation name of the association acting as representative.
+Note that other address detail elements available for Applicants do not appear for Inventors in OLF2.0’s GUI and the PDF request. However, those elements still exist in XML.
+In the case of applicants, element <registered-number/> is ignored and can be empty.
+Below is an example showing the general structure of a <parties> element in ep-request.xml containing a single <applicant> entry, with the top-level elements and attributes listed in the previous tables:
+
+   <parties>
+      <applicants>
+         <applicant sequence="1"
+                    designation="as-indicated"
+                    app-type="applicant-inventor">
+            <addressbook lang="en">
+               <last-name>Manzoni</last-name>
+               <first-name>Salvatore</first-name>
+               <orgname>Borghese S.A.</orgname>
+               <department>Invenzioni</department>
+               <registered-number/>
+               <address>
+                  <pobox/>
+                  <street>Via Roma 8 / Piazza del Duomo</street>
+                  <city>Milano</city>
+                  <state/>
+                  <postcode>20100</postcode>
+                  <country>IT</country>
+               </address>
+               <phone>+39 2 5056 10</phone>
+               <email>manzoni@borghese.it</email>
+            </addressbook>
+            <nationality>
+               <country>IT</country>
+            </nationality>
+            <residence>
+               <country>IT</country>
+            </residence>
+         </applicant>
+      </applicants>
+   </parties>
+Example: Applicant is natural person and also inventor #
+ep-request.xml #
+In this example, there is only one <applicant> in the <applicants> group:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ep-request
+  SYSTEM "ep-request-v1-5.dtd">
+<ep-request lang="en"
+            dtd-version="1.0"
+            produced-by="applicant"
+            ro="EP"
+            date-produced="20240122 11:19:17">
+    <!--software_name --><!--software_version --><!--stylesheet_version -->
+    <file-reference-id>1001_appl-inv</file-reference-id>
+    <request-petition>
+        Grant of European patent, and examination of the application under Article 94, are hereby requested.
+    </request-petition>
+    <invention-title lang="en">INSTANT WATER</invention-title>
+    <invention-title lang="fr">EAU INSTANTANÉE</invention-title>
+    <invention-title lang="de">INSTANT-WASSER</invention-title>
+    <parties>
+        <applicant sequence="1" designation="as-indicated" app-type="applicant-inventor">
+            <addressbook lang="en">
+                <prefix/>
+                <last-name>Manzoni</last-name>
+                <first-name>Salvatore</first-name>
+                <orgname>Borghese S.A.</orgname>
+                <department>Invenzioni</department>
+                <registered-number/>
+                <address>
+                    <pobox/>
+                    <street>Via Roma 8 / Piazza del Duomo</street>
+                    <city>Milano</city>
+                    <state/>
+                    <postcode>20100</postcode>
+                    <country>IT</country>
+                </address>
+                <phone>+39 2 5056 101</phone>
+                <email>manzoni@borghese.it</email>
+            </addressbook>
+            <nationality>
+                <country>IT</country>
+            </nationality>
+            <residence>
+                <country>IT</country>
+            </residence>
+        </applicant>
+    </parties>
+    <check-list/>
+    <ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+    <ep-office-specific-data office="EP" lang="en"/>
+</ep-request>
+ℹ️ Note
+
+Element (19) Address for correspondence can only be supplied if, for the referred applicant:
+
+Checkbox Common representative is enabled in the GUI.
+Element (18) Country/territory of residence is set to an EPC contracting state (e.g.: IT)
+A <correspondence-address> child element must also be present inside <parties> in XML file ep-request.xml, in addition to <applicants>.
+This element must contain a single <addressbook> record in a similar format as described above, but containing only the following children:
+<last-name>, <first-name>, <address>
+
+See example below:
+
+<parties>
+  <applicants>
+    ...
+  </applicants>
+  <correspondence-address>
+    <addressbook lang="en">
+      <last-name>Manzoni</last-name>
+      <first-name>Salvatore</first-name>
+      <address>
+        <pobox/>
+        <street>Via Roma 8 / Piazza del Duomo</street>
+        <city>Milano</city>
+        <state/>
+        <postcode>20100</postcode>
+        <country>IT</country>
+      </address>
+    </addressbook>
+  </correspondence-address>
+</parties>
+Example: Two applicants, two representatives, one inventor #
+The structure of the names data is basically the same for all persons and is described above for the applicant. There are further options for representatives.
+
+ep-request.xml #
+<parties>
+  <applicants>
+    <applicant sequence="1" designation="as-indicated" app-type="applicant"/>
+    <applicant sequence="2" designation="as-indicated" app-type="applicant"/>
+  </applicants>
+
+  <inventors>
+    <ep-inventor sequence="1"
+                 designation="as-indicated"
+                 deceased="no"
+                 inv-rights="successor"/>
+  </inventors>
+
+  <agents>
+    <ep-agent rep-type="common-representative"
+              sequence="1"
+              ep-authorisation="registered"
+              general_authorisation_number="102356"
+              ep-association-number="0.0">
+      <addressbook lang="en">
+        <last-name>IP Partners</last-name>
+        <first-name/>
+        <department>European Patents</department>
+        <registered-number/>
+        <address>
+          <pobox>5088</pobox>
+          <street>Cambridge Science Park / 100 Red Lion Square</street>
+          <city>Cambridge</city>
+          <state>Cambridgeshire</state>
+          <postcode>CB2 1AB</postcode>
+          <country>GB</country>
+        </address>
+        <phone>+44 1223 3516-0</phone>
+        <email>office@ip-partners.co.uk</email>
+      </addressbook>
+    </ep-agent>
+
+    <ep-agent rep-type="attorney"
+              sequence="2"
+              ep-authorisation="attached"/>
+  </agents>
+</parties>
+Example: Two applicants with Rule 7a(1) declaration, first applicant represented by authorised employee #
+ep-request.xml #
+<ep-request ...>
+...
+  <parties>
+    <applicants>
+      <applicant sequence="1" designation="as-indicated" app-type="applicant">
+        <addressbook lang="en"/>
+        <nationality>
+          <country/>
+        </nationality>
+        <residence>
+          <country>CH</country>
+        </residence>
+      </applicant>
+
+      <applicant sequence="2" designation="as-indicated" app-type="applicant">
+        <addressbook lang="en"/>
+        <nationality>
+          <country>IT</country>
+        </nationality>
+        <residence>
+          <country>IT</country>
+        </residence>
+      </applicant>
+
+      <applicant sequence="1" app-type="employee" designation="as-indicated">
+        <addressbook lang="en">
+          <prefix/>
+          <last-name>Mercer</last-name>
+          <first-name>Jeanne-Marie</first-name>
+          <iid>23.78990</iid>
+          <address>
+            <postcode/>
+            <country/>
+          </address>
+        </addressbook>
+        <nationality>
+          <country>EP</country>
+        </nationality>
+        <residence>
+          <country>EP</country>
+        </residence>
+      </applicant>
+    </applicants>
+  </parties>
+
+  <check-list/>
+
+  <ep-language-of-filing lang-code="non-epo">it</ep-language-of-filing>
+  <ep-language-of-filing lang-code="translation">en</ep-language-of-filing>
+
+  <ep-office-specific-data office="EP" lang="en">
+    <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+    <ep-request-for-exam-art94 lang="it"/>
+
+    <ep-declarations>
+      <declaration-of-entity-or-natural-person/>
+    </ep-declarations>
+
+    <ep-electronic-files doc-type="1001"/>
+
+    <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+  </ep-office-specific-data>
+</ep-request>
+Example: Inventor with waiver under Rule 20(1) EPC #
+ep-request.xml #
+<inventors>
+  <ep-inventor sequence="1" designation="as-indicated" deceased="no" inv-rights="under-agreement" inv-rights-date="20140923"/>
+  
+  <ep-inventor sequence="2" designation="as-indicated" deceased="no" inv-rights="under-agreement" inv-rights-date="20131126"/>
+  
+  <ep-inventor sequence="3" designation="as-indicated" deceased="no" renunciation="yes" inv-rights="employee">
+    <addressbook lang="en">
+      <last-name>Lavaill</last-name>
+      <first-name>Thierry</first-name>
+      <address>
+        <city>Rome</city>
+        <postcode/>
+        <country>IT</country>
+      </address>
+    </addressbook>
+  </ep-inventor>
+
+  <ep-inventor sequence="4" designation="as-indicated" deceased="no" inv-rights="employee"/>
+
+  <ep-inventor sequence="5" designation="as-indicated" deceased="yes" inv-rights="successor">
+    <addressbook lang="en">
+      <last-name>Lavaill</last-name>
+      <first-name>Bertrand</first-name>
+      <address>
+        <city/>
+        <postcode/>
+        <country>FR</country>
+      </address>
+    </addressbook>
+  </ep-inventor>
+</inventors>
+
+...
+
+<ep-office-specific-data office="EP" lang="en">
+  <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+  
+  <ep-declarations/>
+  
+  <ep-electronic-files doc-type="1001"/>
+  
+  <ep-electronic-files doc-type="INVT201">
+    <applicant-file-name/>
+    <epo-file-name>Signed-EPR201-1.pdf</epo-file-name>
+  </ep-electronic-files>
+  
+  <ep-electronic-files doc-type="F1002">
+    <applicant-file-name/>
+    <epo-file-name>f1002-1.pdf</epo-file-name>
+  </ep-electronic-files>
+  
+  <ep-electronic-files doc-type="F1002E">
+    <applicant-file-name/>
+    <epo-file-name>f1002-2.pdf</epo-file-name>
+  </ep-electronic-files>
+</ep-office-specific-data>
+ℹ️ Note
+
+The signed waiver must be attached as an additional document (Signed-EPR201.pdf) to take effect. The file EPR201-3.pdf is automatically created by Online Filing 2.0 and may be used for printing and signing; as its automatically created by the system, you are not required to attach it to the application.
+
+EP1001 – Application details – Designation of states #
+The Designation of contracting states, extension states, validation states section of tab Application details in Form EP1001 allows applicants to select designated states, extension states and validation states for their application.
+
+All the contracting states party to the EPC are automatically selected for designation; there is only one flat fee for all states.
+Different designations can be assigned to different applicants, if there is more than one applicant. The designation fee, however, has always to be paid for all contracting states.
+All extension states or individual extension states can be selected. The extension fee is due for each individual state.
+All validation states or individual validation states can be selected where applicable. The validation fee is due for each individual state.
+The applicable designation, extension and validation states are defined by the states applicable on the date of import/export or filing, respectively. In case of a divisional application, the states as of the date of filing of the earlier application are deemed to be designated.
+
+The global information about selection of designated contracting/extension/validation states (applicable to all applicants) is imported from element <ep-designated-states> inside <ep-office-specific-data>. Below is an example showing the basic structure of element <ep-designated-states> in ep-request.xml and the top-level elements in it
+
+<ep-request lang="en"
+            dtd-version="1.0"
+            produced-by="applicant"
+            ro="EP"
+            date-produced="20240122 11:19:17">
+   …
+   <ep-office-specific-data office="EP" lang="en">
+      <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+         <region>
+            <country>EP</country>
+         </region>
+         <country>…</country>
+         …
+         <extension-states>
+            …
+         </extension-states>
+         <validation-states>
+            …
+         </validation-states>
+      </ep-designated-states>
+      …
+   </ep-office-specific-data>
+</ep-request>
+The root <ep-designated-states> element shown above must contain the following attributes:
+
+waiver-communication-and-processing-of-non-designated-states: required attribute
+which must be always present and set to value "no"
+The root <ep-designated-states> element should be followed by:
+
+A <region> element, which is always present and always contains the following single entry:
+<country>EP</country> (representing all contracting states in EPC).
+
+A set of none or more <country> child elements, one per contracting state that is hereby designated to the application.
+E.g.: <country>FR</country>
+
+A <extension-states> element, which can either be empty (if no extension states are selected for the application) or,
+otherwise, contain a set of one or more <country> child elements listing the selected extension states.
+
+A <validation-states> element, identical in format to the one above but for validation states.
+
+For scenarios where multiple applicants need to indicate different designated states from the others,
+this information will be imported from a <designated-states> element inside their corresponding <applicant> entry in <parties>
+
+The basic structure of this <designated-states> element is the same as the one inside <ep-office-specific-data> as previously described.
+
+         <applicant sequence="1"
+                    designation="as-indicated"
+                    app-type="applicant">
+            <addressbook lang="en">
+               …
+            </addressbook>
+            <nationality/>
+            <residence/>
+            <designated-states>
+               <region>
+                  <country>EP</country>
+               </region>
+               <country>…</country>
+               …
+            </designated-states>
+         </applicant>
+See the examples provided below for details about the structure of this element and its expected children elements / attributes for several scenarios.
+
+Example: Designation – All states designated #
+ep-request.xml #
+<ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+  <region>
+    <country>EP</country>
+  </region>
+  <extension-states/>
+  <validation-states/>
+</ep-designated-states>
+Example: Different states for two applicants in divisional application #
+For scenarios where multiple applicants have different designated states, those will be listed in a <designated-states> element inside their corresponding <applicant> entry in <parties>. The basic structure of this <designated-states> element is the same as the one inside <ep-office-specific-data> as previously described.
+
+         <applicant sequence="1"
+                    designation="as-indicated"
+                    app-type="applicant">
+            <addressbook lang="en">
+               …
+            </addressbook>
+            <nationality/>
+            <residence/>
+            <designated-states>
+               <region>
+                  <country>EP</country>
+               </region>
+               <country>…</country>
+               …
+            </designated-states>
+         </applicant>
+The example below demonstrates the selection of different designation states for two different applicants.
+
+ℹ️ Note
+
+By default, when using the OLF2.0 GUI, all states are designated for a European patent application. If you want to include only specific states for the applicants individually, you can do so by selecting them in the form – or listing them in the XML file for import.
+
+<parties>
+  <applicants>
+    <applicant sequence="1" designation="as-indicated" app-type="applicant">
+      <addressbook lang="en"/>
+      <nationality/>
+      <residence/>
+      <designated-states>
+        <country>ES</country>
+        <country>FR</country>
+        <country>IT</country>
+        <country>MC</country>
+        <country>MT</country>
+      </designated-states>
+    </applicant>
+
+    <applicant sequence="2" designation="as-indicated" app-type="applicant-inventor">
+      <addressbook lang="en"/>
+      <nationality/>
+      <residence/>
+      <designated-states>
+        <region>
+          <country>EP</country>
+        </region>
+        <country>AL</country>
+        <country>AT</country>
+        <country>BE</country>
+        <country>TR</country>
+        <country>LI</country>
+      </designated-states>
+    </applicant>
+  </applicants>
+</parties>
+
+<check-list/>
+
+<ep-language-of-filing lang-code="epo">en</ep-language-of-filing>
+
+<ep-office-specific-data office="EP" lang="en">
+  <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+    <region>
+      <country>EP</country>
+    </region>
+    <extension-states/>
+    <validation-states/>
+  </ep-designated-states>
+
+  <ep-declarations/>
+
+  <ep-electronic-files doc-type="1001"/>
+  <ep-electronic-files doc-type="1003"/>
+
+  <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+</ep-office-specific-data>
+Example: All extension states and no validation states selected #
+If no validation states are selected, the <validation-states/> element must be empty, as shown in the example below:
+
+      <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+         <region>
+            <country>EP</country>
+         </region>
+         <extension-states>
+            <country>BA</country>
+         </extension-states>
+         <validation-states/>
+      </ep-designated-states>
+Example: All validation states and no extension states selected #
+If no extension states are selected, the <extension-states/> element must be empty, as shown in the example below:
+
+      <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+         <region>
+            <country>EP</country>
+         </region>
+         <extension-states/>
+         <validation-states>
+            <country>KH</country>
+            <country>MA</country>
+            <country>MD</country>
+            <country>TN</country>
+            <country>GE</country>
+         </validation-states>
+      </ep-designated-states>
+EP1001 – Application details – Priority #
+The Priority section in tab Application details in Form EP1001 is used to enter all priority declarations. The number of national, regional and international priorities is unlimited.
+
+The information about priority claims for the application is imported from section <priority-claims> inside <ep-request> in ep-request.xml.
+
+ℹ️ Note
+
+This section must be present if the application has a declaration for one or more priority claims. Otherwise, it can be omitted from ep-request.xml
+
+Below is an example showing the basic structure of element <priority-claims> in ep-request.xml and the top-level elements in it:
+
+…
+</parties>
+<priority-claims>
+   <ep-priority-claim sequence="1" kind="national" ep-document-type="patent">
+	      <country/>
+	      <doc-number/>
+	      <date/>
+	      <priority-doc-from-library/>
+	      <earlier-searches>
+		         <earlier-search search-type="national"
+						         id="ID_1"
+								 office=""
+								 declaration-of-no-search="not-determined">
+		            <doc-page he="1" type="pdf" wi="1" file=""/>
+         		</earlier-search>
+	      </earlier-searches>
+   </ep-priority-claim>
+   …
+</priority-claims>
+<check-list>
+…
+Each declaration of priority is stored as a <ep-priority-claim> element in <priority-claims>, and must contain the following attributes:
+
+sequence: Order no. of the priority claim in the list.
+E.g.: "1" for the first claim.
+kind: Can be "national", "regional", or "international", depending on the type of claim.
+ep-document-type: Type of application document being attached.
+Can be one of the following values:
+"patent" (default type in most cases)
+"utility" (utility model)
+"provisional"
+"PCT" (for international claims)
+The table below list the child elements in each <ep-priority-claim> entry:
+
+XML Element	Description, attributes and sub-elements
+<country>	2-letter code of country/region to which the claim applies.
+E.g.: <country>FR</country> (France)
+E.g.: <country>EP</country> (all EPC countries)
+<doc-number>	Application number of priority claim.
+<date>	Date of priority claim, in yyyyMMdd format.
+<priority-doc-from-library>	Used when the EPO retrieves priority documents via WIPO DAS.
+Must be present with an empty value and the following attributes:
+- library-identifier: empty
+- action-by: empty
+- priority-doc-access-code: DAS access code
+Example: <priority-doc-from-library library-identifier="" action-by="" priority-doc-access-code="1234"/>
+If there is no such request, the element can be empty or missing.
+<earlier-searches>	Contains a single <earlier-search> element with the following attributes:
+- search-type: must match kind from <ep-priority-claim>:
+    • "national" if kind="national"
+    • "international-type" if kind="regional"
+    • "isr" if kind="international"
+- id-by: e.g., "ID_1" (where 1 is the claim number)
+- office: must match the <country> code in <ep-priority-claim> (e.g., "FR")
+- declaration-of-no-search: must be "not-determined"
+<doc-page> (in <earlier-search>)	Has the following attributes:
+- he: "1"
+- type: "pdf"
+- wi: "1"
+- file: EPO filename of attached priority document (e.g., "PRSR-1.pdf")
+<earlier-searches> example
+
+<earlier-searches>
+   <earlier-search search-type="national"
+                   id="ID_1"
+                   office="FR"
+                   declaration-of-no-search="not-determined">
+      <doc-page he="1" type="pdf" wi="1" file="PRSR-1.pdf"/>
+   </earlier-search>
+</earlier-searches>
+Additionally, when adding a priority claim, it is also possible to:
+
+Request the re-establishment of rights (Article 122 EPC, Rule 136(1) EPC) in respect of the priority period (Article 87(1) EPC). Re-establishment of rights is applicable when the filing date of the priority application is between 12 and 14 months prior to the filing date of the new application.
+Declare that the European patent application being filed is a complete translation of this priority application (Rule 53(3) EPC).
+Declare that there is no intention to file a (further) declaration of priority.
+In those cases, additional information needs to be imported from section <ep-declarations> in the <ep-office-specific-data> top-level element in ep-request.xml, specifically from the following entries that must be present if any of the above cases are applicable (otherwise, they can be missing from the XML file).
+
+<request-re-establishment>
+<declaration-complete-translation-of-priority>
+<declaration-no-intention-to-file-further-priority/>
+The following sample snippet shows the basic structure for the above entries:
+
+<ep-office-specific-data office="EP" lang="en">
+    <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no">
+	      …
+    </ep-designated-states>
+    <ep-declarations>
+        <request-re-establishment>
+	        <document-id lang="">
+		            <country>EP</country>
+         		    <doc-number>10123000.1</doc-number>
+        	</document-id>
+        </request-re-establishment>
+	    <declaration-complete-translation-of-priority>
+		    <document-id lang="">
+		        <country>IT</country>
+		        <doc-number>TO 2011 A234098</doc-number>
+		    </document-id>
+	     </declaration-complete-translation-of-priority>
+	     <declaration-no-intention-to-file-further-priority/>
+  </ep-declarations>
+Example: Three types of priority claims (national, regional, international) #
+In the provided example:
+
+Three priorities have been entered, one for each priority type: national, regional and international.
+The national priority has the translation option selected and the international priority with the Request for retrieval of priority document from DAS option selected.
+Copies of the search results have been attached for both the national and the regional priority.
+The applicant also declares that it is not intended to file a further declaration of priority.
+Priority XML: national, regional and international priority
+
+<priority-claims>
+  <ep-priority-claim sequence="1" kind="national" ep-document-type="patent">
+    <country>IT</country>
+    <doc-number>TO 2011 A230498</doc-number>
+    <date>20110906</date>
+    <priority-doc-from-library/>
+    <earlier-searches>
+      <earlier-search search-type="national"
+                      id-by="ID_1"
+                      office="IT"
+                      declaration-of-no-search="not-determined">
+        <doc-page he="1" type="pdf" wi="1" file="PRSR-1.pdf"/>
+      </earlier-search>
+    </earlier-searches>
+  </ep-priority-claim>
+
+  <ep-priority-claim sequence="2" kind="regional" ep-document-type="patent">
+    <country>EP</country>
+    <doc-number>EP23123456.8</doc-number>
+    <date>20230119</date>
+    <priority-doc-from-library/>
+    <earlier-searches>
+      <earlier-search search-type="international-type"
+                      id-by="ID_3"
+                      office="EP"
+                      declaration-of-no-search="not-determined">
+        <doc-page he="1" type="pdf" wi="1" file="PRSR-2.pdf"/>
+      </earlier-search>
+    </earlier-searches>
+  </ep-priority-claim>
+
+  <ep-priority-claim sequence="3" kind="international" ep-document-type="patent">
+    <country>US</country>
+    <doc-number>PCT/US2011/123456</doc-number>
+    <date>20110721</date>
+    <priority-doc-from-library
+      library-identifier=""
+      action-by=""
+      priority-doc-access-code="1234"/>
+    <earlier-searches>
+      <earlier-search search-type="isr"
+                      id-by="ID_2"
+                      office="US"
+                      declaration-of-no-search="not-determined">
+        <doc-page he="1" type="pdf" wi="1" file=""/>
+      </earlier-search>
+    </earlier-searches>
+  </ep-priority-claim>
+</priority-claims>
+[…]
+
+Priority XML: priority declarations and search results
+
+<ep-office-specific-data office="EP" lang="en">
+  <ep-designated-states waiver-communication-and-processing-of-non-designated-states="no"/>
+  
+  <ep-declarations>
+    <declaration-complete-translation-of-priority>
+      <document-id lang="en">
+        <country>IT</country>
+        <doc-number>TO 2011 A230498</doc-number>
+      </document-id>
+    </declaration-complete-translation-of-priority>
+
+    <declaration-complete-translation-of-priority/>
+    <declaration-no-intent-to-file-further-priority/>
+  </ep-declarations>
+
+  <ep-electronic-files doc-type="1001">
+    <applicant-file-name/>
+    <epo-file-name>ep-request.pdf</epo-file-name>
+  </ep-electronic-files>
+
+  <ep-electronic-files doc-type="PRSR">
+    <applicant-file-name>Search results IT.pdf</applicant-file-name>
+    <epo-file-name>PRSR-1.pdf</epo-file-name>
+  </ep-electronic-files>
+
+  <ep-electronic-files doc-type="PRSR">
+    <applicant-file-name>Search results EP.pdf</applicant-file-name>
+    <epo-file-name>PRSR-2.pdf</epo-file-name>
+  </ep-electronic-files>
+
+  <ep-financial-data curr="EUR" fee-amounts-unlocked-by-user="no"/>
+</ep-office-specific-data>
