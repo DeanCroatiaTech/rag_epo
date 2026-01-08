@@ -1,10 +1,10 @@
 # RAG-EPO
 
-A Retrieval Augmented Generation (RAG) system for querying European Patent Office (EPO) EP1001 form documentation. This project uses LangChain, ChromaDB, and OpenAI to create an intelligent question-answering system that can retrieve and answer questions about EP1001 form documentation.
+A Retrieval Augmented Generation (RAG) system for querying documentation. This project uses LangChain, ChromaDB, and OpenAI to create an intelligent question-answering system that can retrieve and answer questions about domain-specific documentation.
 
 ## Features
 
-- **Document Ingestion**: Process and chunk EP1001 documentation into a vector database
+- **Document Ingestion**: Process and chunk documents into a vector database
 - **Semantic Search**: Retrieve relevant context using OpenAI embeddings
 - **Question Answering**: Generate accurate answers using GPT-4.1-nano with retrieved context
 - **Conversational Interface**: Chat interface built with Gradio (currently configured but commented out)
@@ -43,7 +43,7 @@ OPENAI_API_KEY=your_api_key_here
 
 ```
 rag_epo/
-├── data/                  # Document files (EP1001.txt, etc.)
+├── data/                  # Document files
 ├── src/
 │   ├── ingest.py         # Document ingestion and vector database creation
 │   ├── retrieve.py       # RAG retrieval and question answering
@@ -91,7 +91,7 @@ python src/retrieve.py
 ```python
 from src.retrieve import answer_question
 
-question = "What is the EP1001 form used for?"
+question = "What is the main purpose of this document?"
 answer, docs = answer_question(question)
 print(answer)
 ```
@@ -158,9 +158,9 @@ Test cases are stored in `src/evaluation/tests.jsonl` (JSONL format). Each test 
 Example test case:
 ```json
 {
-  "question": "What is the EP1001 form used for?",
-  "keywords": ["EP1001", "European patent", "application"],
-  "reference_answer": "The EP1001 form is used for filing European patent applications...",
+  "question": "What is the main purpose of this document?",
+  "keywords": ["purpose", "documentation", "usage"],
+  "reference_answer": "This document provides information about...",
   "category": "direct_fact"
 }
 ```
