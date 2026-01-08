@@ -43,18 +43,18 @@ OPENAI_API_KEY=your_api_key_here
 
 ```
 rag_epo/
-├── data/                  # Document files
+├── data/                 # Document files for ingestion
 ├── src/
 │   ├── ingest.py         # Document ingestion and vector database creation
 │   ├── retrieve.py       # RAG retrieval and question answering
+│   ├── app.py            # Gradio chat interface
 │   ├── evaluator.py      # Gradio dashboard for evaluation visualization
 │   └── evaluation/       # Evaluation framework
 │       ├── eval.py       # Core evaluation functions and CLI interface
 │       ├── test.py       # Test loading utilities and data models
 │       └── tests.jsonl   # Test cases in JSONL format
 ├── vector_db/            # ChromaDB vector database (created after ingestion)
-├── main.py               # Main entry point
-└── pyproject.toml        # Project dependencies
+├── pyproject.toml        # Project dependencies
 ```
 
 ## Usage
